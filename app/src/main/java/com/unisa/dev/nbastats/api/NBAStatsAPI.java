@@ -17,4 +17,10 @@ public interface NBAStatsAPI {
     );
 
 
+    @GET("specifiedTeam.php")
+    Call<List<PlayerModel>> getSpecifyYear(
+            @Query("team_abbreviation") String teamAbbrevation,
+            @Query("season") String season
+    );
+
 }

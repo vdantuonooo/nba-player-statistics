@@ -18,5 +18,14 @@
         android:id="@+id/teamPlayersFragment"
         android:name="com.unisa.dev.nbastats.fragments.TeamPlayersFragment"
         android:label="fragment_team_players_list"
-        tools:layout="@layout/fragment_team_players_list" />
+        tools:layout="@layout/fragment_team_players_list" >
+        <action
+            android:id="@+id/action_teamPlayersFragment_to_playerDetailFragment"
+            app:destination="@id/playerDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playerDetailFragment"
+        android:name="com.unisa.dev.nbastats.fragments.PlayerDetailFragment"
+        android:label="fragment_player_detail"
+        tools:layout="@layout/fragment_player_detail" />
 </navigation>

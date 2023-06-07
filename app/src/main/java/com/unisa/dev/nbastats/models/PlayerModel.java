@@ -1,7 +1,9 @@
 package com.unisa.dev.nbastats.models;
 import com.google.gson.annotations.SerializedName;
 
-public class PlayerModel {
+import java.io.Serializable;
+
+public class PlayerModel implements Serializable {
     @SerializedName("name")
     private String name;
     @SerializedName("team_abbrevation")
@@ -20,6 +22,8 @@ public class PlayerModel {
     private Integer draftRound;
     @SerializedName("draft_number")
     private Integer draftNumber;
+    @SerializedName("draft_year")
+    private Integer draftYear;
     @SerializedName("gp")
     private Integer gp;
     @SerializedName("pts")
@@ -33,6 +37,13 @@ public class PlayerModel {
     @SerializedName("NBAID")
     private String NBAID;
 
+    public Integer getDraftYear() {
+        return draftYear;
+    }
+
+    public void setDraftYear(Integer draftYear) {
+        this.draftYear = draftYear;
+    }
 
     public String getNBAID() {
         return NBAID;
@@ -98,7 +109,7 @@ public class PlayerModel {
         this.country = country;
     }
 
-    public int getDraftRound() {
+    public Integer getDraftRound() {
         return draftRound;
     }
 
@@ -106,7 +117,7 @@ public class PlayerModel {
         this.draftRound = draftRound;
     }
 
-    public int getDraftNumber() {
+    public Integer getDraftNumber() {
         return draftNumber;
     }
 

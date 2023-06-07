@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitNBAStats{
 
     private static Retrofit retrofit;
-    private static String URL = "http://192.168.1.139:8888/";
+    private static String URL = "http://192.168.1.90:8888/";
     private OnPlayerReceived onPlayerListener;
 
     public static Retrofit getClient() {
@@ -70,6 +70,23 @@ public class RetrofitNBAStats{
         });
     }
 
+    public void getSpecifiedYear(String teamAbbrevation, String season){
+        NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
+        Call<List<PlayerModel>> call = nbaStatsAPI.getSpecifyYear(teamAbbrevation, season);
+
+        call.enqueue(new ResponseHandler<List<PlayerModel>>() {
+            @Override
+            void onResponse(List<PlayerModel> response) {
+                onPlayerListener.OnPlayerReceivedListener(response);
+            }
+
+            @Override
+            void onError(Throwable error) {
+                onPlayerListener.onError(error);
+            }
+        });
+    }
+
     public interface OnErrorListener{
         void onError(Throwable error);
     }
@@ -81,7 +98,5 @@ public class RetrofitNBAStats{
     public void setOnPlayerListener(OnPlayerReceived onPlayerListener){
         this.onPlayerListener = onPlayerListener;
     }
-
-
 
 }

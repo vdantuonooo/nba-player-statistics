@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ public class AdapterPlayers extends RecyclerView.Adapter<AdapterPlayers.ViewHold
 
     private List<PlayerModel> list;
     private Context context;
+    private OnPlayerClicked onPlayerClickedListener;
 
     public AdapterPlayers(List<PlayerModel> list, Context context) {
         this.list = list;
@@ -46,12 +48,21 @@ public class AdapterPlayers extends RecyclerView.Adapter<AdapterPlayers.ViewHold
         holder.playerName.setText(list.get(actualPos).getName());
         holder.season.setText(list.get(actualPos).getSeason());
 
+        holder.boxContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onPlayerClickedListener.onPlayerClicked(list.get(actualPos));
+            }
+        });
+
         String URL = "https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/"+list.get(actualPos).getNBAID()+".png";
         Glide.with(context)
                 .load(URL)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.drawable.placeholder)
                 .into(holder.playerPhoto);
+
+
 
 
     }
@@ -66,6 +77,8 @@ public class AdapterPlayers extends RecyclerView.Adapter<AdapterPlayers.ViewHold
 
         private ImageView playerPhoto;
         private TextView playerName, teamName, season;
+        private RelativeLayout boxContainer;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,7 +87,16 @@ public class AdapterPlayers extends RecyclerView.Adapter<AdapterPlayers.ViewHold
             playerName = itemView.findViewById(R.id.namePlayer);
             teamName = itemView.findViewById(R.id.squadName);
             season = itemView.findViewById(R.id.seasonYear);
+            boxContainer = itemView.findViewById(R.id.boxContainer);
         }
     }
 
+    public interface OnPlayerClicked{
+        void onPlayerClicked(PlayerModel playerModel);
+    }
+
+    public void setOnPlayerClickedListener(OnPlayerClicked onPlayerClickedListener){
+        this.onPlayerClickedListener = onPlayerClickedListener;
+
+    }
 }

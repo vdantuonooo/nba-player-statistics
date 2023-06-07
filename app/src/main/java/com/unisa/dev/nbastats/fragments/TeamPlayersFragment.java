@@ -13,9 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.unisa.dev.nbastats.R;
 import com.unisa.dev.nbastats.adapters.AdapterPlayers;
@@ -24,10 +28,14 @@ import com.unisa.dev.nbastats.models.PlayerModel;
 import com.unisa.dev.nbastats.models.TeamModel;
 import com.unisa.dev.nbastats.utilities.StringConverter;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
-public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.OnPlayerReceived {
+public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.OnPlayerReceived, AdapterPlayers.OnPlayerClicked {
 
     private View view;
     private Bundle bundle;
@@ -42,9 +50,13 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
     private RecyclerView recyclerViewPlayers;
     private AdapterPlayers adapterPlayers;
 
+    private int counter = 0;
 
 
     private RetrofitNBAStats retrofitNBAStats;
+    private Spinner spinner;
+
+    private List<String> completeList = new ArrayList<>();
 
 
 
@@ -66,6 +78,8 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
 
         teamName = view.findViewById(R.id.teamName);
 
+        spinner = view.findViewById(R.id.spinner);
+
         bundle = getArguments();
 
         if(bundle!=null){
@@ -74,6 +88,7 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
 
         retrofitNBAStats.getPlayerInfo(StringConverter.getInstance().getAbbreviatedString(receivedTeamModel.getTeamName()));
 
+        counter++;
 
         return view;
     }
@@ -100,14 +115,59 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
 
     @Override
     public void onError(Throwable error) {
-
+        if(getContext()!=null) {
+            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
     @Override
     public void OnPlayerReceivedListener(List<PlayerModel> playerModelList) {
         progressBar.setVisibility(View.GONE);
+
         List<PlayerModel> list = playerModelList;
+
+
+        List<String> season = new ArrayList<>();
+
+
+        for(int i = 0; i<list.size(); i++){
+            season.add( list.get(i).getSeason());
+        }
+
+        HashSet<String> uniqueStrings = new HashSet<>(season);
+        List<String> uniqueList = new ArrayList<>(uniqueStrings);
+
+
+        if(uniqueList.size()>2){
+            completeList.clear();
+
+            completeList = uniqueList;
+            Collections.sort(completeList, new Comparator<String>() {
+                @Override
+                public int compare(String season1, String season2) {
+                    return season2.compareTo(season1);
+                }
+            });
+
+
+            completeList.add(0, "none");
+            completeList.add("Seleziona tutti gli anni");
+        }else{
+
+            uniqueList.add(0, "none");
+            uniqueList.add("Seleziona tutti gli anni");
+        }
+
+        if(uniqueList.size()<=2) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, completeList);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+        }else{
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, completeList);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+        }
 
         Collections.reverse(list);
 
@@ -116,8 +176,37 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
         recyclerViewPlayers.setHasFixedSize(true);
         recyclerViewPlayers.setLayoutManager(new LinearLayoutManager(getContext()));
         adapterPlayers = new AdapterPlayers(list, getContext());
+        adapterPlayers.setOnPlayerClickedListener(this);
         recyclerViewPlayers.setAdapter(adapterPlayers);
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(Objects.equals(completeList.get(i), "none")){
+
+                }else if(Objects.equals(completeList.get(i), "Seleziona tutti gli anni")){
+                    retrofitNBAStats.getPlayerInfo(StringConverter.getInstance().getAbbreviatedString(receivedTeamModel.getTeamName()));
+                }
+                else{
+                    retrofitNBAStats.getSpecifiedYear(StringConverter.getInstance().getAbbreviatedString(receivedTeamModel.getTeamName()),
+                            completeList.get(i));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onPlayerClicked(PlayerModel playerModel) {
+        Bundle b = new Bundle();
+        b.putSerializable("playerSelected", playerModel);
+        navController.navigate(R.id.action_teamPlayersFragment_to_playerDetailFragment, b);
 
     }
 }
