@@ -15,8 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,13 +53,16 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
     private RecyclerView recyclerViewPlayers;
     private AdapterPlayers adapterPlayers;
 
-    private int counter = 0;
-
-
     private RetrofitNBAStats retrofitNBAStats;
     private Spinner spinner;
 
     private List<String> completeList = new ArrayList<>();
+
+    private ImageView searchIcon;
+    private EditText editTextPlayer;
+    private Button buttonSearch;
+    private RelativeLayout searchLayout;
+    private boolean isVisible = false;
 
 
 
@@ -69,27 +75,39 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
         rightLogo = view.findViewById(R.id.teamLogoRight);
         backarrow = view.findViewById(R.id.backarrow);
         progressBar = view.findViewById(R.id.progressBar);
-
-        retrofitNBAStats = new RetrofitNBAStats();
-
         recyclerViewPlayers = view.findViewById(R.id.recyclerViewPlayers);
-
-        retrofitNBAStats.setOnPlayerListener(this);
-
+        spinner = view.findViewById(R.id.spinner);
         teamName = view.findViewById(R.id.teamName);
 
-        spinner = view.findViewById(R.id.spinner);
+        searchIcon = view.findViewById(R.id.searchIcon);
+        editTextPlayer = view.findViewById(R.id.insertEditText);
+        buttonSearch = view.findViewById(R.id.goButton);
+        searchLayout = view.findViewById(R.id.searchLayout);
+
+
+
+        retrofitNBAStats = new RetrofitNBAStats();
+        retrofitNBAStats.setOnPlayerListener(this);
 
         bundle = getArguments();
-
         if(bundle!=null){
             receivedTeamModel = (TeamModel) bundle.getSerializable("teamModel");
         }
 
+        searchIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isVisible){
+                    searchLayout.setVisibility(View.GONE);
+                    isVisible = false;
+                }else {
+                    searchLayout.setVisibility(View.VISIBLE);
+                    isVisible = true;
+                }
+            }
+        });
+
         retrofitNBAStats.getPlayerInfo(StringConverter.getInstance().getAbbreviatedString(receivedTeamModel.getTeamName()));
-
-        counter++;
-
         return view;
     }
 
@@ -110,6 +128,16 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
             }
         });
 
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String namePlayer = editTextPlayer.getText().toString();
+                String teamName = StringConverter.getInstance().getAbbreviatedString(receivedTeamModel.getTeamName());
+                retrofitNBAStats.getSpecifiedPlayerWithTeam( teamName , namePlayer);
+                isVisible = false;
+                searchLayout.setVisibility(View.GONE);
+            }
+        });
 
     }
 
@@ -126,10 +154,7 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
         progressBar.setVisibility(View.GONE);
 
         List<PlayerModel> list = playerModelList;
-
-
         List<String> season = new ArrayList<>();
-
 
         for(int i = 0; i<list.size(); i++){
             season.add( list.get(i).getSeason());
@@ -186,10 +211,14 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
 
                 }else if(Objects.equals(completeList.get(i), "Seleziona tutti gli anni")){
                     retrofitNBAStats.getPlayerInfo(StringConverter.getInstance().getAbbreviatedString(receivedTeamModel.getTeamName()));
+                    searchLayout.setVisibility(View.GONE);
+                    isVisible = false;
                 }
                 else{
                     retrofitNBAStats.getSpecifiedYear(StringConverter.getInstance().getAbbreviatedString(receivedTeamModel.getTeamName()),
                             completeList.get(i));
+                    searchLayout.setVisibility(View.GONE);
+                    isVisible = false;
                 }
             }
 

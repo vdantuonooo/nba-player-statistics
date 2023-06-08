@@ -17,6 +17,7 @@ public class RetrofitNBAStats{
     private static Retrofit retrofit;
     private static String URL = "http://192.168.1.90:8888/";
     private OnPlayerReceived onPlayerListener;
+    private OnAccountSigned onAccountSigned;
 
     public static Retrofit getClient() {
         if (retrofit == null) {
@@ -87,6 +88,42 @@ public class RetrofitNBAStats{
         });
     }
 
+    public void getSpecifiedPlayerWithTeam(String teamAbbreviation, String playerName){
+        NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
+        Call<List<PlayerModel>> call = nbaStatsAPI.getSpecifiedPlayerWithTeam(teamAbbreviation, playerName);
+
+        call.enqueue(new ResponseHandler<List<PlayerModel>>() {
+            @Override
+            void onResponse(List<PlayerModel> response) {
+                onPlayerListener.OnPlayerReceivedListener(response);
+            }
+
+            @Override
+            void onError(Throwable error) {
+                onPlayerListener.onError(error);
+            }
+        });
+    }
+
+    public void postCreateAccount(String email, String password){
+        NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
+        Call<Void> call = nbaStatsAPI.postCreateUser(email, password);
+
+        call.enqueue(new ResponseHandler<Void>() {
+            @Override
+            void onResponse(Void response) {
+                onAccountSigned.onAccountSigned();
+            }
+
+            @Override
+            void onError(Throwable error) {
+                onAccountSigned.onError(error);
+            }
+        });
+    }
+
+
+
     public interface OnErrorListener{
         void onError(Throwable error);
     }
@@ -97,6 +134,14 @@ public class RetrofitNBAStats{
 
     public void setOnPlayerListener(OnPlayerReceived onPlayerListener){
         this.onPlayerListener = onPlayerListener;
+    }
+
+    public interface OnAccountSigned extends OnErrorListener{
+        void onAccountSigned();
+    }
+
+    public void setOnAccountSigned(OnAccountSigned onAccountSigned){
+        this.onAccountSigned = onAccountSigned;
     }
 
 }

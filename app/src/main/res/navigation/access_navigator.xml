@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/access_navigator"
+    app:startDestination="@id/accessFragment">
+
+    <fragment
+        android:id="@+id/accessFragment"
+        android:name="com.unisa.dev.nbastats.fragments.accessFragments.AccessFragment"
+        android:label="fragment_access"
+        tools:layout="@layout/fragment_access" >
+        <action
+            android:id="@+id/action_accessFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_accessFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.unisa.dev.nbastats.fragments.accessFragments.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/logInFragment"
+        android:name="com.unisa.dev.nbastats.fragments.accessFragments.LogInFragment"
+        android:label="fragment_log_in"
+        tools:layout="@layout/fragment_log_in" />
+</navigation>

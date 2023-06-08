@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.unisa.dev.nbastats.R;
+import com.unisa.dev.nbastats.fragments.accessFragments.SignUpFragment;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -24,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intentMain = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intentMain = new Intent(SplashActivity.this, AccessActivity.class);
                 startActivity(intentMain);
                 finish();
             }
