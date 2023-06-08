@@ -1,5 +1,6 @@
 package com.unisa.dev.nbastats.api;
 
+import com.unisa.dev.nbastats.models.LoginModel;
 import com.unisa.dev.nbastats.models.PlayerModel;
 
 import java.util.List;
@@ -39,6 +40,14 @@ public interface NBAStatsAPI {
             @Field("email") String email,
             @Field("password") String password
     );
+
+    @FormUrlEncoded
+    @POST("findUserLogin.php")
+    Call<LoginModel> postLogin(
+            @Field("email") String email,
+            @Field("password") String password
+    );
+
 
 
 

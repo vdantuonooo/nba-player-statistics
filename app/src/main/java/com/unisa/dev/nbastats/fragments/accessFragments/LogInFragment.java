@@ -1,66 +1,102 @@
 package com.unisa.dev.nbastats.fragments.accessFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.unisa.dev.nbastats.R;
+import com.unisa.dev.nbastats.activities.MainActivity;
+import com.unisa.dev.nbastats.api.RetrofitNBAStats;
+import com.unisa.dev.nbastats.models.LoginModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LogInFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LogInFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class LogInFragment extends Fragment implements RetrofitNBAStats.OnPostLogin {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private View view;
 
-    public LogInFragment() {
-        // Required empty public constructor
-    }
+    private ImageView backarrow;
+    private NavController navController;
+    private RetrofitNBAStats retrofitNBAStats;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LogInFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LogInFragment newInstance(String param1, String param2) {
-        LogInFragment fragment = new LogInFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private EditText email, password;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private RelativeLayout logInButton;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_log_in, container, false);
+        view = inflater.inflate(R.layout.fragment_log_in, container, false);
+
+
+        backarrow = view.findViewById(R.id.backarrow);
+        email = view.findViewById(R.id.editTextEmail);
+        password = view.findViewById(R.id.editTextPassword);
+        logInButton = view.findViewById(R.id.logInButton);
+
+
+        retrofitNBAStats = new RetrofitNBAStats();
+        retrofitNBAStats.setOnPostLoginListener(this);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        navController = Navigation.findNavController(view);
+
+        backarrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.popBackStack();
+            }
+        });
+
+        logInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String emailText = email.getText().toString();
+                String passwordText = password.getText().toString();
+
+                retrofitNBAStats.postLogin(emailText, passwordText);
+            }
+        });
+
+    }
+
+    @Override
+    public void onError(Throwable error) {
+        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPostLogin(LoginModel loginModel) {
+        Toast.makeText(getContext(), loginModel.getMessage(), Toast.LENGTH_SHORT).show();
+
+        if(loginModel.isSuccess()){
+            if(getActivity()!=null) {
+                Intent i = new Intent(getActivity(), MainActivity.class);
+                startActivity(i);
+                getActivity().finish();
+            }
+        }else{
+            Toast.makeText(getContext(), loginModel.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

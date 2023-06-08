@@ -1,5 +1,6 @@
 package com.unisa.dev.nbastats.api;
 
+import com.unisa.dev.nbastats.models.LoginModel;
 import com.unisa.dev.nbastats.models.PlayerModel;
 
 import org.json.JSONObject;
@@ -18,6 +19,7 @@ public class RetrofitNBAStats{
     private static String URL = "http://192.168.1.90:8888/";
     private OnPlayerReceived onPlayerListener;
     private OnAccountSigned onAccountSigned;
+    private OnPostLogin onPostLoginListener;
 
     public static Retrofit getClient() {
         if (retrofit == null) {
@@ -122,6 +124,22 @@ public class RetrofitNBAStats{
         });
     }
 
+    public void postLogin(String email, String password){
+        NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
+        Call<LoginModel> call = nbaStatsAPI.postLogin(email, password);
+        call.enqueue(new ResponseHandler<LoginModel>() {
+            @Override
+            void onResponse(LoginModel response) {
+                onPostLoginListener.onPostLogin(response);
+            }
+
+            @Override
+            void onError(Throwable error) {
+                onPostLoginListener.onError(error);
+            }
+        });
+    }
+
 
 
     public interface OnErrorListener{
@@ -142,6 +160,14 @@ public class RetrofitNBAStats{
 
     public void setOnAccountSigned(OnAccountSigned onAccountSigned){
         this.onAccountSigned = onAccountSigned;
+    }
+
+    public interface OnPostLogin extends OnErrorListener{
+        void onPostLogin(LoginModel loginModel);
+    }
+
+    public void setOnPostLoginListener(OnPostLogin onPostLoginListener){
+        this.onPostLoginListener = onPostLoginListener;
     }
 
 }
