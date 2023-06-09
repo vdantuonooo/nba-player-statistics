@@ -52,7 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-
         android:layout_below="@id/topHeader">
     <LinearLayout
         android:layout_width="match_parent"
@@ -100,6 +99,27 @@
                 android:textSize="25sp" />
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/avancedStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_button"
+            android:backgroundTint="@color/primaryColor">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="statistiche avanzate"
+                android:fontFamily="@font/street_power"
+                android:textSize="20sp"
+                android:paddingVertical="3dp"
+                android:paddingHorizontal="50dp"
+                android:textColor="@color/black"/>
+
+
+        </RelativeLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -329,7 +349,9 @@
                     android:fontFamily="@font/street_power"
                     android:text="Gare Giocate"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/gamePlayed"
@@ -354,7 +376,9 @@
                     android:fontFamily="@font/street_power"
                     android:text="Media punti"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="16sp"
+                    android:singleLine="true"
+                    android:ellipsize="end"/>
 
                 <TextView
                     android:id="@+id/pts"

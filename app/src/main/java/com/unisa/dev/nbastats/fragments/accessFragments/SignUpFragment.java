@@ -88,6 +88,7 @@ public class SignUpFragment extends Fragment implements RetrofitNBAStats.OnAccou
     public void onAccountSigned(MessageModel messageModel) {
         if(Objects.equals(messageModel.getMessage(), "Esiste gia un utente con questa email.")
                 || Objects.equals(messageModel.getMessage(), "Errore durante la creazione dell'account.")){
+
             Toast.makeText(getContext(), messageModel.getMessage(), Toast.LENGTH_LONG).show();
 
         }else{

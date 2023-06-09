@@ -142,6 +142,24 @@ public class RetrofitNBAStats{
     }
 
 
+    public void getAllHystoryPlayer(String namePlayer){
+        NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
+        Call<List<PlayerModel>> call = nbaStatsAPI.getAllHistoryPlayer(namePlayer);
+
+        call.enqueue(new ResponseHandler<List<PlayerModel>>() {
+            @Override
+            void onResponse(List<PlayerModel> response) {
+                onPlayerListener.OnPlayerReceivedListener(response);
+            }
+
+            @Override
+            void onError(Throwable error) {
+                onPlayerListener.onError(error);
+            }
+        });
+
+
+    }
 
     public interface OnErrorListener{
         void onError(Throwable error);

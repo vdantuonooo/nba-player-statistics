@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,6 +37,8 @@ public class PlayerDetailFragment extends Fragment {
             roundDraft, draftNumber, gamePlayed;
     private TextView pts, reb, assist, season;
     private ImageView imageView, backarrow;
+
+    private RelativeLayout avancedStats;
 
 
 
@@ -63,6 +66,7 @@ public class PlayerDetailFragment extends Fragment {
         reb = view.findViewById(R.id.reb);
         assist = view.findViewById(R.id.assist);
         season = view.findViewById(R.id.season);
+        avancedStats = view.findViewById(R.id.avancedStats);
 
         backarrow = view.findViewById(R.id.backarrow);
 
@@ -116,6 +120,13 @@ public class PlayerDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 navController.popBackStack();
+            }
+        });
+
+        avancedStats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.action_playerDetailFragment_to_avancedStatsFragment, bundle);
             }
         });
 

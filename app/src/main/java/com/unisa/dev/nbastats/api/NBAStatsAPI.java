@@ -49,6 +49,12 @@ public interface NBAStatsAPI {
             @Field("password") String password
     );
 
+    @GET("allHystoryPlayer.php")
+    Call<List<PlayerModel>> getAllHistoryPlayer(
+            @Query("player_name") String teamPlayer
+    );
+
+
 
 
 

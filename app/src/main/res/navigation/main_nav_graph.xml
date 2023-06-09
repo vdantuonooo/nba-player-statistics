@@ -30,10 +30,19 @@
         android:id="@+id/playerDetailFragment"
         android:name="com.unisa.dev.nbastats.fragments.PlayerDetailFragment"
         android:label="fragment_player_detail"
-        tools:layout="@layout/fragment_player_detail" />
+        tools:layout="@layout/fragment_player_detail" >
+        <action
+            android:id="@+id/action_playerDetailFragment_to_avancedStatsFragment"
+            app:destination="@id/avancedStatsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.unisa.dev.nbastats.fragments.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/avancedStatsFragment"
+        android:name="com.unisa.dev.nbastats.fragments.AvancedStatsFragment"
+        android:label="fragment_avanced_stats"
+        tools:layout="@layout/fragment_avanced_stats" />
 </navigation>
