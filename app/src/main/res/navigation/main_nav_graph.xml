@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_teamPlayersFragment"
             app:destination="@id/teamPlayersFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/teamPlayersFragment"
@@ -28,4 +31,9 @@
         android:name="com.unisa.dev.nbastats.fragments.PlayerDetailFragment"
         android:label="fragment_player_detail"
         tools:layout="@layout/fragment_player_detail" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.unisa.dev.nbastats.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
 </navigation>

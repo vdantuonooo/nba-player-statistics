@@ -21,6 +21,9 @@ import android.widget.Toast;
 import com.unisa.dev.nbastats.R;
 import com.unisa.dev.nbastats.activities.MainActivity;
 import com.unisa.dev.nbastats.api.RetrofitNBAStats;
+import com.unisa.dev.nbastats.models.MessageModel;
+
+import java.util.Objects;
 
 public class SignUpFragment extends Fragment implements RetrofitNBAStats.OnAccountSigned {
 
@@ -29,12 +32,7 @@ public class SignUpFragment extends Fragment implements RetrofitNBAStats.OnAccou
     private NavController navController;
     private RetrofitNBAStats retrofitNBAStats;
     private EditText email, password;
-
     private RelativeLayout signUpButton;
-
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,13 +85,19 @@ public class SignUpFragment extends Fragment implements RetrofitNBAStats.OnAccou
 
 
     @Override
-    public void onAccountSigned() {
-        Toast.makeText(getContext(), "Registrazione effettuata con successo", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(getActivity(), MainActivity.class);
-        startActivity(i);
+    public void onAccountSigned(MessageModel messageModel) {
+        if(Objects.equals(messageModel.getMessage(), "Esiste gia un utente con questa email.")
+                || Objects.equals(messageModel.getMessage(), "Errore durante la creazione dell'account.")){
+            Toast.makeText(getContext(), messageModel.getMessage(), Toast.LENGTH_LONG).show();
 
-        if(getActivity()!=null) {
-            getActivity().finish();
+        }else{
+            Toast.makeText(getContext(), messageModel.getMessage() , Toast.LENGTH_LONG).show();
+            Intent i = new Intent(getActivity(), MainActivity.class);
+            startActivity(i);
+
+            if(getActivity()!=null) {
+                getActivity().finish();
+            }
         }
 
     }

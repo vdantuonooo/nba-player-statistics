@@ -1,6 +1,7 @@
 package com.unisa.dev.nbastats.api;
 
 import com.unisa.dev.nbastats.models.LoginModel;
+import com.unisa.dev.nbastats.models.MessageModel;
 import com.unisa.dev.nbastats.models.PlayerModel;
 
 import org.json.JSONObject;
@@ -109,12 +110,12 @@ public class RetrofitNBAStats{
 
     public void postCreateAccount(String email, String password){
         NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
-        Call<Void> call = nbaStatsAPI.postCreateUser(email, password);
+        Call<MessageModel> call = nbaStatsAPI.postCreateUser(email, password);
 
-        call.enqueue(new ResponseHandler<Void>() {
+        call.enqueue(new ResponseHandler<MessageModel>() {
             @Override
-            void onResponse(Void response) {
-                onAccountSigned.onAccountSigned();
+            void onResponse(MessageModel response) {
+                onAccountSigned.onAccountSigned(response);
             }
 
             @Override
@@ -155,7 +156,7 @@ public class RetrofitNBAStats{
     }
 
     public interface OnAccountSigned extends OnErrorListener{
-        void onAccountSigned();
+        void onAccountSigned(MessageModel messageModel);
     }
 
     public void setOnAccountSigned(OnAccountSigned onAccountSigned){
