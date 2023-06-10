@@ -3,6 +3,7 @@ package com.unisa.dev.nbastats.api;
 import com.unisa.dev.nbastats.models.LoginModel;
 import com.unisa.dev.nbastats.models.MessageModel;
 import com.unisa.dev.nbastats.models.PlayerModel;
+import com.unisa.dev.nbastats.models.PodiumModel;
 
 import org.json.JSONObject;
 
@@ -17,10 +18,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitNBAStats{
 
     private static Retrofit retrofit;
-    private static String URL = "http://192.168.1.90:8888/";
+    private static String URL = "http://192.168.1.139:8888/";
     private OnPlayerReceived onPlayerListener;
     private OnAccountSigned onAccountSigned;
     private OnPostLogin onPostLoginListener;
+    private OnGetPointsStats onPointsListener;
+    private OnGetReboundsStats onReboundsListener;
+    private OnGetAssistStats onAssistListener;
 
     public static Retrofit getClient() {
         if (retrofit == null) {
@@ -157,9 +161,61 @@ public class RetrofitNBAStats{
                 onPlayerListener.onError(error);
             }
         });
-
-
     }
+
+
+    public void getStatsAssistForTeam(String teamAbbrevation){
+        NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
+        Call<List<PodiumModel>> call = nbaStatsAPI.getStatsAssistForTeam(teamAbbrevation);
+
+        call.enqueue(new ResponseHandler<List<PodiumModel>>() {
+            @Override
+            void onResponse(List<PodiumModel> response) {
+                onAssistListener.onGetAssist(response);
+            }
+
+            @Override
+            void onError(Throwable error) {
+                onAssistListener.onError(error);
+            }
+        });
+    }
+
+
+    public void getStatsReboundsForTeam(String teamAbbrevation){
+        NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
+        Call<List<PodiumModel>> call = nbaStatsAPI.getStatsReboundForTeam(teamAbbrevation);
+
+        call.enqueue(new ResponseHandler<List<PodiumModel>>() {
+            @Override
+            void onResponse(List<PodiumModel> response) {
+                onReboundsListener.onGetRebounds(response);
+            }
+
+            @Override
+            void onError(Throwable error) {
+                onReboundsListener.onError(error);
+            }
+        });
+    }
+
+    public void getStatsPointsForTeam(String teamAbbrevation){
+        NBAStatsAPI nbaStatsAPI = RetrofitNBAStats.getClient().create(NBAStatsAPI.class);
+        Call<List<PodiumModel>> call = nbaStatsAPI.getStatsPointsForTeam(teamAbbrevation);
+
+        call.enqueue(new ResponseHandler<List<PodiumModel>>() {
+            @Override
+            void onResponse(List<PodiumModel> response) {
+                onPointsListener.onGetPoints(response);
+            }
+
+            @Override
+            void onError(Throwable error) {
+                onPointsListener.onError(error);
+            }
+        });
+    }
+
 
     public interface OnErrorListener{
         void onError(Throwable error);
@@ -189,4 +245,28 @@ public class RetrofitNBAStats{
         this.onPostLoginListener = onPostLoginListener;
     }
 
+    public interface OnGetPointsStats extends OnErrorListener{
+        void onGetPoints( List<PodiumModel> podiumModel);
+    }
+
+    public interface OnGetAssistStats extends OnErrorListener{
+        void onGetAssist( List<PodiumModel> podiumModel);
+    }
+
+    public interface OnGetReboundsStats extends OnErrorListener{
+        void onGetRebounds( List<PodiumModel> podiumModel);
+    }
+
+    public void setOnPointsListener(OnGetPointsStats onPointsListener){
+        this.onPointsListener = onPointsListener;
+    }
+
+    public void setOnReboundsListener(OnGetReboundsStats onReboundsListener){
+        this.onReboundsListener = onReboundsListener;
+    }
+
+    public void setOnAssistListener(OnGetAssistStats onAssistListener){
+        this.onAssistListener = onAssistListener;
+
+    }
 }

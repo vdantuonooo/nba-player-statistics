@@ -131,13 +131,13 @@ public class PlayerDetailFragment extends Fragment {
         });
 
 
+
         String URL = "https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/"+playerModel.getNBAID()+".png";
         Glide.with(getContext())
                 .load(URL)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.drawable.placeholder)
                 .into(imageView);
-
 
 
     }

@@ -258,7 +258,7 @@ public class AvancedStatsFragment extends Fragment implements RetrofitNBAStats.O
             index1++;
         }
 
-        LineDataSet dataSet1 = new LineDataSet(entries1, "Punti Medi Annuali");
+        LineDataSet dataSet1 = new LineDataSet(entries1, "Assist Medi Annuali");
 
         dataSet1.setColor(Color.BLACK);
         dataSet1.setValueTextColor(Color.RED);

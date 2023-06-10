@@ -3,11 +3,11 @@ package com.unisa.dev.nbastats.api;
 import com.unisa.dev.nbastats.models.LoginModel;
 import com.unisa.dev.nbastats.models.MessageModel;
 import com.unisa.dev.nbastats.models.PlayerModel;
+import com.unisa.dev.nbastats.models.PodiumModel;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -54,6 +54,23 @@ public interface NBAStatsAPI {
             @Query("player_name") String teamPlayer
     );
 
+
+
+
+    @GET("statsAssistForTeam.php")
+    Call<List<PodiumModel>> getStatsAssistForTeam(
+            @Query("team_abbreviation") String teamAbbrevation
+    );
+
+    @GET("statsReboundsForTeam.php")
+    Call<List<PodiumModel>> getStatsReboundForTeam(
+            @Query("team_abbreviation") String teamAbbrevation
+    );
+
+    @GET("statsPointsForTeam.php")
+    Call<List<PodiumModel>> getStatsPointsForTeam(
+            @Query("team_abbreviation") String teamAbbrevation
+    );
 
 
 
