@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitNBAStats{
 
     private static Retrofit retrofit;
-    private static String URL = "http://192.168.1.139:8888/";
+    private static String URL = "http://192.168.1.17:8888/";
     private OnPlayerReceived onPlayerListener;
     private OnAccountSigned onAccountSigned;
     private OnPostLogin onPostLoginListener;

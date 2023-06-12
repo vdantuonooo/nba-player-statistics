@@ -35,8 +35,6 @@ public class HomeFragment extends Fragment implements GridTeamsAdapter.OnItemCli
 
     private NavController navController;
 
-    private RelativeLayout searchButton;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,7 +56,6 @@ public class HomeFragment extends Fragment implements GridTeamsAdapter.OnItemCli
             teamModels.add(team);
         }
 
-        searchButton = view.findViewById(R.id.searchButton);
 
         recyclerView = view.findViewById(R.id.recyclerView);
 
@@ -78,12 +75,6 @@ public class HomeFragment extends Fragment implements GridTeamsAdapter.OnItemCli
         gridTeamsAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(gridTeamsAdapter);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.action_homeFragment_to_searchFragment);
-            }
-        });
 
     }
 

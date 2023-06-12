@@ -64,6 +64,9 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
     private RelativeLayout searchLayout;
     private boolean isVisible = false;
 
+    private RelativeLayout searchButton;
+
+
 
 
     @Override
@@ -84,6 +87,7 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
         buttonSearch = view.findViewById(R.id.goButton);
         searchLayout = view.findViewById(R.id.searchLayout);
 
+        searchButton = view.findViewById(R.id.searchButton);
 
 
         retrofitNBAStats = new RetrofitNBAStats();
@@ -139,6 +143,14 @@ public class TeamPlayersFragment extends Fragment implements RetrofitNBAStats.On
             }
         });
 
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("team_abbrevation", receivedTeamModel.getTeamName());
+                navController.navigate(R.id.action_teamPlayersFragment_to_searchFragment, bundle1);
+            }
+        });
     }
 
     @Override

@@ -207,9 +207,9 @@ public class AvancedStatsFragment extends Fragment implements RetrofitNBAStats.O
             String label = entry.getKey();
             Double value = entry.getValue();
 
-            String formattedValue = decimalFormat.format(value); // Arrotonda il valore alla seconda cifra decimale
 
-            entries.add(new Entry(index, Float.parseFloat(formattedValue)));
+
+            entries.add(new Entry(index, value.floatValue()));
             index++;
         }
 
@@ -251,10 +251,9 @@ public class AvancedStatsFragment extends Fragment implements RetrofitNBAStats.O
             String label1 = entry.getKey();
             Double value1 = entry.getValue();
 
-            String formattedValue = decimalFormat.format(value1); // Arrotonda il valore alla seconda cifra decimale
 
 
-            entries1.add(new Entry(index1, Float.parseFloat(formattedValue)));
+            entries1.add(new Entry(index1, value1.floatValue()));
             index1++;
         }
 
@@ -298,7 +297,7 @@ public class AvancedStatsFragment extends Fragment implements RetrofitNBAStats.O
             String formattedValue = decimalFormat.format(value2); // Arrotonda il valore alla seconda cifra decimale
 
 
-            entries2.add(new Entry(index2, Float.parseFloat(formattedValue)));
+            entries2.add(new Entry(index2, value2.floatValue()));
             index2++;
         }
 

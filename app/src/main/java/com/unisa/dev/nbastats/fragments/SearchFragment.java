@@ -1,5 +1,6 @@
 package com.unisa.dev.nbastats.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,8 +21,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.unisa.dev.nbastats.R;
 import com.unisa.dev.nbastats.api.RetrofitNBAStats;
 import com.unisa.dev.nbastats.models.PodiumModel;
+import com.unisa.dev.nbastats.utilities.StringConverter;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 public class SearchFragment extends Fragment implements RetrofitNBAStats.OnGetAssistStats, RetrofitNBAStats.OnGetPointsStats, RetrofitNBAStats.OnGetReboundsStats {
 
@@ -55,12 +60,19 @@ public class SearchFragment extends Fragment implements RetrofitNBAStats.OnGetAs
     private RetrofitNBAStats retrofitNBAStats;
 
 
+    private String receivedTeam;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        Bundle b = getArguments();
+        if(b != null){
+            receivedTeam = b.getString("team_abbrevation");
+        }
 
         backarrow = view.findViewById(R.id.backarrow);
 
@@ -106,10 +118,11 @@ public class SearchFragment extends Fragment implements RetrofitNBAStats.OnGetAs
         thirdStatsRebounds = view.findViewById(R.id.statThirdRebounds);
 
 
+        String teamAbbrevation = StringConverter.getInstance().getAbbreviatedString(receivedTeam);
         retrofitNBAStats = new RetrofitNBAStats();
-        retrofitNBAStats.getStatsReboundsForTeam("LAL");
-        retrofitNBAStats.getStatsAssistForTeam("LAL");
-        retrofitNBAStats.getStatsPointsForTeam("LAL");
+        retrofitNBAStats.getStatsReboundsForTeam(teamAbbrevation);
+        retrofitNBAStats.getStatsAssistForTeam(teamAbbrevation);
+        retrofitNBAStats.getStatsPointsForTeam(teamAbbrevation);
 
 
         retrofitNBAStats.setOnPointsListener(this);
@@ -122,8 +135,10 @@ public class SearchFragment extends Fragment implements RetrofitNBAStats.OnGetAs
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        teamName.setText("LOS ANGELES LAKERS");
-        teamLogo.setImageResource(R.drawable.los_angeles_lakers);
+        teamName.setText(receivedTeam);
+
+        int resource = getImageResouceId(StringConverter.getInstance().getAbbreviatedString(receivedTeam));
+        teamLogo.setImageResource(resource);
 
         navController = Navigation.findNavController(view);
 
@@ -146,9 +161,9 @@ public class SearchFragment extends Fragment implements RetrofitNBAStats.OnGetAs
         List<PodiumModel> podiumModels = podiumModel;
 
 
-        firstStats.setText(podiumModel.get(0).getAvgStat()+"");
-        secondStats.setText(podiumModel.get(1).getAvgStat()+"");
-        thirdStats.setText(podiumModel.get(2).getAvgStat()+"");
+        firstStats.setText(riduciADueCifreDecimali((float) podiumModel.get(0).getAvgStat())+"");
+        secondStats.setText(riduciADueCifreDecimali((float) podiumModel.get(1).getAvgStat())+"");
+        thirdStats.setText(riduciADueCifreDecimali((float) podiumModel.get(2).getAvgStat())+"");
 
 
         firstName.setText(podiumModel.get(0).getName());
@@ -189,9 +204,9 @@ public class SearchFragment extends Fragment implements RetrofitNBAStats.OnGetAs
         List<PodiumModel> podiumModels = podiumModel;
 
 
-        firstStatsAssist.setText(podiumModel.get(0).getAvgStat()+"");
-        secondStatsAssist.setText(podiumModel.get(1).getAvgStat()+"");
-        thirdStatsAssist.setText(podiumModel.get(2).getAvgStat()+"");
+        firstStatsAssist.setText(riduciADueCifreDecimali((float) podiumModel.get(0).getAvgStat())+"");
+        secondStatsAssist.setText(riduciADueCifreDecimali((float) podiumModel.get(1).getAvgStat())+"");
+        thirdStatsAssist.setText(riduciADueCifreDecimali((float) podiumModel.get(2).getAvgStat())+"");
 
 
         firstNameAssist.setText(podiumModel.get(0).getName());
@@ -231,9 +246,9 @@ public class SearchFragment extends Fragment implements RetrofitNBAStats.OnGetAs
         List<PodiumModel> podiumModels = podiumModel;
 
 
-        firstStatsRebounds.setText(podiumModel.get(0).getAvgStat()+"");
-        secondStatsRebounds.setText(podiumModel.get(1).getAvgStat()+"");
-        thirdStatsRebounds.setText(podiumModel.get(2).getAvgStat()+"");
+        firstStatsRebounds.setText(riduciADueCifreDecimali((float) podiumModel.get(0).getAvgStat())+"");
+        secondStatsRebounds.setText(riduciADueCifreDecimali((float) podiumModel.get(1).getAvgStat())+"");
+        thirdStatsRebounds.setText(riduciADueCifreDecimali((float) podiumModel.get(2).getAvgStat())+"");
 
 
         firstNameRebounds.setText(podiumModel.get(0).getName());
@@ -265,5 +280,118 @@ public class SearchFragment extends Fragment implements RetrofitNBAStats.OnGetAs
                 .into(thirdPlayerRebounds);
 
 
+    }
+
+
+    public static float riduciADueCifreDecimali(float numero) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+        symbols.setDecimalSeparator('.');
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.##", symbols);
+        String numeroFormattato = decimalFormat.format(numero);
+
+        return Float.parseFloat(numeroFormattato);
+    }
+
+    public int getImageResouceId(String abbreviazioneSquadra) {
+        int resourceId = 0;
+
+        switch (abbreviazioneSquadra) {
+            case "ATL":
+                resourceId = R.drawable.atlanta_hawks;
+                break;
+            case "BOS":
+                resourceId = R.drawable.boston_celtics;
+                break;
+            case "BKN":
+                resourceId = R.drawable.brooklyn_nets;
+                break;
+            case "CHA":
+                resourceId = R.drawable.charlotte_hornes;
+                break;
+            case "CHI":
+                resourceId = R.drawable.chicago_bulls;
+                break;
+            case "CLE":
+                resourceId = R.drawable.cliveland_cavaliers;
+                break;
+            case "DAL":
+                resourceId = R.drawable.dallas_mavericks;
+                break;
+            case "DEN":
+                resourceId = R.drawable.denver_nuggets;
+                break;
+            case "DET":
+                resourceId = R.drawable.detroit_pistons;
+                break;
+            case "GSW":
+                resourceId = R.drawable.golden_state_warriors;
+                break;
+            case "HOU":
+                resourceId = R.drawable.huston_rockets;
+                break;
+            case "IND":
+                resourceId = R.drawable.indiana_pacers;
+                break;
+            case "LAC":
+                resourceId = R.drawable.los_angeles_clippers;
+                break;
+            case "LAL":
+                resourceId = R.drawable.los_angeles_lakers;
+                break;
+            case "MEM":
+                resourceId = R.drawable.memphis_grizzlies;
+                break;
+            case "MIA":
+                resourceId = R.drawable.miami_heats;
+                break;
+            case "MIL":
+                resourceId = R.drawable.milwakee_bucks;
+                break;
+            case "MIN":
+                resourceId = R.drawable.minnesota_timberwolfs;
+                break;
+            case "NOP":
+                resourceId = R.drawable.new_orleans_pelicans;
+                break;
+            case "NYK":
+                resourceId = R.drawable.new_york_knicks;
+                break;
+            case "OKC":
+                resourceId = R.drawable.oklahoma_city_thunders;
+                break;
+            case "ORL":
+                resourceId = R.drawable.orlando_magic;
+                break;
+            case "PHI":
+                resourceId = R.drawable.philadelphia_76ers;
+                break;
+            case "PHX":
+                resourceId = R.drawable.phoenix_suns;
+                break;
+            case "POR":
+                resourceId = R.drawable.portlands_trail_blazers;
+                break;
+            case "SAC":
+                resourceId = R.drawable.sacramento_kings;
+                break;
+            case "SAS":
+                resourceId = R.drawable.san_antonio_spurs;
+                break;
+            case "TOR":
+                resourceId = R.drawable.toronto_raptors;
+                break;
+            case "UTA":
+                resourceId = R.drawable.utah_jazz;
+                break;
+            case "WSH":
+                resourceId = R.drawable.washington_wizards;
+                break;
+            default:
+                // Abbreviazione squadra non riconosciuta
+                break;
+        }
+
+        return resourceId;
     }
 }

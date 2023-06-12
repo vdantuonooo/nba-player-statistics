@@ -22,30 +22,9 @@
         android:layout_marginBottom="5dp"
         />
 
-    <RelativeLayout
-        android:id="@+id/searchButton"
-        android:layout_below="@id/hedaer"
-        android:layout_width="300dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:background="@drawable/custom_button">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="effettua una ricerca"
-            android:fontFamily="@font/street_power"
-            android:gravity="center"
-            android:paddingVertical="5dp"
-            android:layout_centerHorizontal="true"
-            android:textSize="20sp"
-            android:textColor="@color/black"/>
-
-    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/searchButton"
+        android:layout_below="@id/hedaer"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

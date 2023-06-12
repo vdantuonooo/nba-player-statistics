@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_homeFragment_to_teamPlayersFragment"
             app:destination="@id/teamPlayersFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/teamPlayersFragment"
@@ -25,6 +22,9 @@
         <action
             android:id="@+id/action_teamPlayersFragment_to_playerDetailFragment"
             app:destination="@id/playerDetailFragment" />
+        <action
+            android:id="@+id/action_teamPlayersFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/playerDetailFragment"
